@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Film-System", "Film-System\Film-System.csproj", "{7BCFFA69-D965-4563-BFAA-8C020ADC3346}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BCFFA69-D965-4563-BFAA-8C020ADC3346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BCFFA69-D965-4563-BFAA-8C020ADC3346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BCFFA69-D965-4563-BFAA-8C020ADC3346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BCFFA69-D965-4563-BFAA-8C020ADC3346}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A2A28E1-BEAE-4D2E-8CD8-2F5B514D0E32}
+	EndGlobalSection
+EndGlobal
