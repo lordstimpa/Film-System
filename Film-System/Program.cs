@@ -5,7 +5,6 @@ using System.Globalization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthorization();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -19,8 +18,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+app.UseHttpsRedirection();
 
-// Add person
+// POST person
 app.MapPost("/person", (Person person) =>
 {
     TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
@@ -42,6 +42,13 @@ app.MapGet("/person", (HttpContext httpContext) =>
 .WithName("GetPeople");
 
 // Get all genres connected to a person
+app.MapGet("/genre", (HttpContext httpContext) =>
+{
+    var response = SQLServerDataAccess.GetGenre();
+
+    return response;
+})
+.WithName("GetGenre");
 
 // Get all movies connected to a person
 

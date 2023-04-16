@@ -22,12 +22,21 @@ namespace FilmSystemAPI.DataAccess
             }
         }
 
-        // GET all people in the database
+        // GET people
         public static List<Person> GetPeople()
         {
             using (var context = new FilmSystemDbContext())
             {
                 return context.Person.ToList();
+            }
+        }
+
+        // GET genres
+        public static List<Genre> GetGenre()
+        {
+            using (var context = new FilmSystemDbContext())
+            {
+                return context.Genre.ToList();
             }
         }
     }
