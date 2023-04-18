@@ -1,5 +1,7 @@
+using Film_System.Repository;
+using Film_System.Repository_Models;
+using FilmSystem.DataAccess;
 using FilmSystem.Models;
-using FilmSystemAPI.DataAccess;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,37 +22,32 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.UseHttpsRedirection();
 
-// POST person
-app.MapPost("/person", (Person person) =>
-{
-    TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
-    person.First_name = myTI.ToTitleCase(person.First_name);
-
-    var response = SQLServerDataAccess.AddPerson(person);
-
-    return response;
-})
-.WithName("AddPerson");
-
 // GET all people
 app.MapGet("/person", (HttpContext httpContext) =>
 {
-    var response = SQLServerDataAccess.GetPeople();
+    PersonRepository personRepo = new PersonRepository(new FilmSystemDbContext());
 
-    return response;
+    return personRepo.GetAll();
 })
 .WithName("GetPeople");
 
-// Get all genres connected to a person
-app.MapGet("/genre", (HttpContext httpContext) =>
+// GET all genres connected to a person
+app.MapGet("/persongenre/{id}", (int id, HttpContext httpContext) =>
 {
-    var response = SQLServerDataAccess.GetGenre();
+    PersonGenreRepository genreRepo = new PersonGenreRepository(new FilmSystemDbContext());
 
-    return response;
+    return genreRepo.GetByCondition(genre => genre.Fk_person == id);
 })
-.WithName("GetGenre");
+.WithName("GetGenreByPersonId");
 
-// Get all movies connected to a person
+// GET all movies connected to a person
+app.MapGet("/movie/{id}", (int id, HttpContext httpContext) =>
+{
+    MovieRepository movieRepo = new MovieRepository(new FilmSystemDbContext());
+
+    return movieRepo.GetByCondition(movie => movie.Fk_person == id);
+})
+.WithName("GetMovieByPersonId");
 
 // Add and get rating on movies connected to a person
 

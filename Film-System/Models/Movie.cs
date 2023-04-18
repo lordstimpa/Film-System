@@ -11,7 +11,7 @@ namespace FilmSystem.Models
     public class Movie
     {
         [Key]
-        public int Id_movielink { get; set; }
+        public int Id_movie { get; set; }
 
         [ForeignKey("Person")]
         public int Fk_person { get; set; }
