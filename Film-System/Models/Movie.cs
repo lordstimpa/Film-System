@@ -24,6 +24,5 @@ namespace FilmSystem.Models
         [Required]
         [MaxLength(2048)]
         public string Link { get; set; }
-
     }
 }

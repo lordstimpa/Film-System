@@ -25,7 +25,8 @@ app.UseHttpsRedirection();
 // GET all people
 app.MapGet("/person", (HttpContext httpContext) =>
 {
-    PersonRepository personRepo = new PersonRepository(new FilmSystemDbContext());
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    PersonRepository personRepo = new PersonRepository(filmSystemDbContext);
 
     return personRepo.GetAll();
 })
@@ -34,22 +35,50 @@ app.MapGet("/person", (HttpContext httpContext) =>
 // GET all genres connected to a person
 app.MapGet("/persongenre/{id}", (int id, HttpContext httpContext) =>
 {
-    PersonGenreRepository genreRepo = new PersonGenreRepository(new FilmSystemDbContext());
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    PersonGenreRepository personGenreRepo = new PersonGenreRepository(filmSystemDbContext);
+    PersonRepository personRepo = new PersonRepository(filmSystemDbContext);
+    GenreRepository genreRep = new GenreRepository(filmSystemDbContext);
+   
+    var genres = personGenreRepo.GetByCondition(pG => pG.Fk_person == id).Join(genreRep.GetAll(),
+                   personGenre => personGenre.Fk_genre,
+                   genres => genres.Id_genre,
+                   (persGen, gen) => new { Genre = gen }).ToList();
 
-    return genreRepo.GetByCondition(genre => genre.Fk_person == id);
+    return genres;
 })
 .WithName("GetGenreByPersonId");
 
 // GET all movies connected to a person
 app.MapGet("/movie/{id}", (int id, HttpContext httpContext) =>
 {
-    MovieRepository movieRepo = new MovieRepository(new FilmSystemDbContext());
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    MovieRepository movieRepo = new MovieRepository(filmSystemDbContext);
 
-    return movieRepo.GetByCondition(movie => movie.Fk_person == id);
+    var movies = movieRepo.GetByCondition(m => m.Fk_person == id).ToList();
+
+    return movies;
 })
 .WithName("GetMovieByPersonId");
 
-// Add and get rating on movies connected to a person
+// GET rating on movie connected to a person
+app.MapGet("/movierating/{id}", (int id, HttpContext httpContext) =>
+{
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    MovieRatingRepository movieRatingRepo = new MovieRatingRepository(filmSystemDbContext);
+    PersonRepository personRepo = new PersonRepository(filmSystemDbContext);
+    MovieRepository movieRepo = new MovieRepository(filmSystemDbContext);
+
+    var movieRatings = movieRatingRepo.GetByCondition(pG => pG.Fk_person == id).Join(movieRepo.GetAll(),
+               personRepo => personRepo.Fk_person,
+               movieRepo => movieRepo.Id_movie,
+               (movRate, gen) => new { Genre = gen }).ToList();
+
+    return movieRatings;
+})
+.WithName("GetMovieRatingByPersonId");
+
+// ADD rating on movie connected to a person
 
 // Connect a person to a new genre
 
