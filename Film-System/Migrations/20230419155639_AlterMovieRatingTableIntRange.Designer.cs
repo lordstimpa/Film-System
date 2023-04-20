@@ -3,6 +3,7 @@ using FilmSystem.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Film_System.Migrations
 {
     [DbContext(typeof(FilmSystemDbContext))]
-    partial class FilmSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230419155639_AlterMovieRatingTableIntRange")]
+    partial class AlterMovieRatingTableIntRange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +43,7 @@ namespace Film_System.Migrations
 
                     b.HasKey("Id_genre");
 
-                    b.ToTable("Genre", (string)null);
+                    b.ToTable("Genre");
                 });
 
             modelBuilder.Entity("FilmSystem.Models.Movie", b =>
@@ -69,7 +71,7 @@ namespace Film_System.Migrations
 
                     b.HasIndex("Fk_person");
 
-                    b.ToTable("Movie", (string)null);
+                    b.ToTable("Movie");
                 });
 
             modelBuilder.Entity("FilmSystem.Models.MovieGenre", b =>
@@ -92,7 +94,7 @@ namespace Film_System.Migrations
 
                     b.HasIndex("Fk_movie");
 
-                    b.ToTable("MovieGenre", (string)null);
+                    b.ToTable("MovieGenre");
                 });
 
             modelBuilder.Entity("FilmSystem.Models.MovieRating", b =>
@@ -118,7 +120,7 @@ namespace Film_System.Migrations
 
                     b.HasIndex("Fk_person");
 
-                    b.ToTable("MovieRating", (string)null);
+                    b.ToTable("MovieRating");
                 });
 
             modelBuilder.Entity("FilmSystem.Models.Person", b =>
@@ -146,7 +148,7 @@ namespace Film_System.Migrations
 
                     b.HasKey("Id_person");
 
-                    b.ToTable("Person", (string)null);
+                    b.ToTable("Person");
                 });
 
             modelBuilder.Entity("FilmSystem.Models.PersonGenre", b =>
@@ -169,7 +171,7 @@ namespace Film_System.Migrations
 
                     b.HasIndex("Fk_person");
 
-                    b.ToTable("PersonGenre", (string)null);
+                    b.ToTable("PersonGenre");
                 });
 
             modelBuilder.Entity("FilmSystem.Models.Movie", b =>

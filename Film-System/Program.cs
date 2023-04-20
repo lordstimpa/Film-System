@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.UseHttpsRedirection();
 
-// GET all people
+// ( GET ) all people
 app.MapGet("/person", (HttpContext httpContext) =>
 {
     FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
@@ -32,15 +32,15 @@ app.MapGet("/person", (HttpContext httpContext) =>
 })
 .WithName("GetPeople");
 
-// GET all genres connected to a person
+// ( GET ) all genres connected to a person
 app.MapGet("/persongenre/{id}", (int id, HttpContext httpContext) =>
 {
     FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
     PersonGenreRepository personGenreRepo = new PersonGenreRepository(filmSystemDbContext);
     PersonRepository personRepo = new PersonRepository(filmSystemDbContext);
-    GenreRepository genreRep = new GenreRepository(filmSystemDbContext);
+    GenreRepository genreRepo = new GenreRepository(filmSystemDbContext);
    
-    var genres = personGenreRepo.GetByCondition(pG => pG.Fk_person == id).Join(genreRep.GetAll(),
+    var genres = personGenreRepo.GetByCondition(pG => pG.Fk_person == id).Join(genreRepo.GetAll(),
                    personGenre => personGenre.Fk_genre,
                    genres => genres.Id_genre,
                    (persGen, gen) => new { Genre = gen }).ToList();
@@ -49,7 +49,7 @@ app.MapGet("/persongenre/{id}", (int id, HttpContext httpContext) =>
 })
 .WithName("GetGenreByPersonId");
 
-// GET all movies connected to a person
+// ( GET ) all movies connected to a person
 app.MapGet("/movie/{id}", (int id, HttpContext httpContext) =>
 {
     FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
@@ -61,31 +61,61 @@ app.MapGet("/movie/{id}", (int id, HttpContext httpContext) =>
 })
 .WithName("GetMovieByPersonId");
 
-// GET rating on movie connected to a person
+// ( GET ) rating on movie connected to a person
 app.MapGet("/movierating/{id}", (int id, HttpContext httpContext) =>
 {
     FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
     MovieRatingRepository movieRatingRepo = new MovieRatingRepository(filmSystemDbContext);
-    PersonRepository personRepo = new PersonRepository(filmSystemDbContext);
-    MovieRepository movieRepo = new MovieRepository(filmSystemDbContext);
 
-    var movieRatings = movieRatingRepo.GetByCondition(pG => pG.Fk_person == id).Join(movieRepo.GetAll(),
-               personRepo => personRepo.Fk_person,
-               movieRepo => movieRepo.Id_movie,
-               (movRate, gen) => new { Genre = gen }).ToList();
+    var movieRatings = movieRatingRepo.GetByCondition(mR => mR.Fk_person == id).ToList();
 
     return movieRatings;
 })
 .WithName("GetMovieRatingByPersonId");
 
-// ADD rating on movie connected to a person
+// ( POST ) rating on movie connected to a person
+app.MapPost("/movierating", (MovieRating movieRating, HttpContext httpContext) =>
+{
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    MovieRatingRepository movieRatingRepo = new MovieRatingRepository(filmSystemDbContext);
 
-// Connect a person to a new genre
+    movieRatingRepo.Create(movieRating);
+    filmSystemDbContext.SaveChanges();
 
-// Add new links for a person 
+    return movieRating;
+})
+.WithName("PostMovieRatingByPersonId");
 
-// Add new links for a genre
+// ( POST ) Connect a person to a new genre
+app.MapPost("/persongenre", (PersonGenre personGenre, HttpContext httpContext) =>
+{
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    PersonGenreRepository personGenreRepo = new PersonGenreRepository(filmSystemDbContext);
 
-// Get movies related to a genre from an external API (TMDB)
+    personGenreRepo.Create(personGenre);
+    filmSystemDbContext.SaveChanges();
+
+    return personGenre;
+})
+.WithName("PutPersonToGenreByPersonId");
+
+// ( PUT ) new links for a person 
+/*
+app.MapPost("/persongenre", (PersonGenre personGenre, HttpContext httpContext) =>
+{
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    PersonGenreRepository personGenreRepo = new PersonGenreRepository(filmSystemDbContext);
+
+    personGenreRepo.Create(personGenre);
+    filmSystemDbContext.SaveChanges();
+
+    return personGenre;
+})
+.WithName("PutPersonToGenreByPersonId");
+*/
+
+// ( PUT ) new links for a genre
+
+// ( GET ) movies related to a genre from an external API (TMDB)
 
 app.Run();

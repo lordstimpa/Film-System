@@ -19,7 +19,7 @@ namespace FilmSystem.DataAccess
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // DESKTOP connection string
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-Q2LT895; Initial Catalog=FilmSystem; Integrated Security=true");
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-Q2LT895; Initial Catalog=FilmSystem; Integrated Security=true; TrustServerCertificate=True");
 
             // LAPTOP connection string
             // optionsBuilder.UseSqlServer("Data Source=DESKTOP-HPC3BVL; Initial Catalog=FilmSystem; Integrated Security=true");
