@@ -12,6 +12,8 @@ namespace FilmSystem.Models
         [Key]
         public int Id_genre { get; set; }
 
+        public int Id_tmdb { get; set; }
+
         [Required]
         [MaxLength(30)]
         public string Title { get; set; }
