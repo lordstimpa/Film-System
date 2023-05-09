@@ -12,6 +12,12 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Services cors
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,8 +27,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+// App cors
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors("corsapp");
+app.UseAuthorization();
 
 // ( GET ) all people
 app.MapGet("/person", (HttpContext httpContext) =>
@@ -33,6 +42,16 @@ app.MapGet("/person", (HttpContext httpContext) =>
     return personRepo.GetAll();
 })
 .WithName("GetPeople");
+
+// ( GET ) all genres
+app.MapGet("/genre", (HttpContext httpContext) =>
+{
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    GenreRepository genreRepo = new GenreRepository(filmSystemDbContext);
+
+    return genreRepo.GetAll();
+})
+.WithName("GetGenre");
 
 // ( GET ) all genres connected to a person
 app.MapGet("/persongenre/{id}", (int id, HttpContext httpContext) =>
@@ -74,6 +93,20 @@ app.MapGet("/movierating/{id}", (int id, HttpContext httpContext) =>
     return movieRatings;
 })
 .WithName("GetMovieRatingByPersonId");
+
+// ( POST ) new person
+app.MapPost("/person", (Person person, HttpContext httpContext) =>
+{
+    FilmSystemDbContext filmSystemDbContext = new FilmSystemDbContext();
+    PersonRepository personRepo = new PersonRepository(filmSystemDbContext);
+
+    personRepo.Create(person);
+    filmSystemDbContext.SaveChanges();
+
+    return person;
+})
+.WithName("PostPerson");
+
 
 // ( POST ) rating on movie connected to a person
 app.MapPost("/movierating", (MovieRating movieRating, HttpContext httpContext) =>
